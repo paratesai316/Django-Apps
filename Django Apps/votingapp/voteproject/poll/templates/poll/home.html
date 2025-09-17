@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Voting System</title>
+    <style>
+        body { font-family: Arial; text-align: center; background: #fafaff;}
+        .container { margin: 40px auto; background: #fff; padding: 32px; border-radius:14px; box-shadow: 0 2px 10px #eee; max-width:400px;}
+        .btn { font-size:1.1em; padding: 8px 24px; border-radius:6px; margin:10px; }
+        .vote-btn { background: #e0e0ff; border: 1px solid #99f; cursor:pointer;}
+        .reveal-btn { background:#d4ffd4; border:1px solid #6f6;}
+        .reset-btn { background: #ffecec; border: 1px solid #f99;}
+        .votes { font-size:1.3em; margin:18px;}
+        input[type='text'] { font-size:1em; padding:5px 8px; margin:8px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Voting Booth</h2>
+    {% if not candidates or candidates|length != 2 %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="name1" placeholder="Candidate 1" required><br>
+            <input type="text" name="name2" placeholder="Candidate 2" required><br>
+            <button type="submit" name="set_candidates" class="btn vote-btn">Start Poll</button>
+        </form>
+    {% elif not reveal %}
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <button type="submit" name="vote_for" value="0" class="btn vote-btn">{{ candidates.0 }}</button>
+                <button type="submit" name="vote_for" value="1" class="btn vote-btn">{{ candidates.1 }}</button>
+            </div>
+        </form>
+        <form method="post" style="margin-top:18px;">
+            {% csrf_token %}
+            <button type="submit" name="reveal" value="1" class="btn reveal-btn">Reveal Votes</button>
+            <button type="submit" name="reset" value="1" class="btn reset-btn">Reset Poll</button>
+        </form>
+    {% else %}
+        <div class="votes">
+            <b>Results:</b><br>
+            {{ candidates.0 }}: {{ votes.0 }} votes<br>
+            {{ candidates.1 }}: {{ votes.1 }} votes<br>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="reset" value="1" class="btn reset-btn">New Poll</button>
+        </form>
+    {% endif %}
+</div>
+</body>
+</html>

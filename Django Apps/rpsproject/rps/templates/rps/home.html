@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock Paper Scissors</title>
+    <style>
+        body { font-family: Arial; text-align: center;}
+        .rps-container { 
+            margin: 40px auto; 
+            border: 2px solid #222; 
+            border-radius: 20px; 
+            width: 320px; 
+            padding: 28px; 
+            background: #f9f9f9;}
+        .rps-title { font-size: 2em; font-weight: bold; }
+        .score { margin-bottom: 16px; font-size: 1.2em;}
+        .choices { margin: 18px 0;}
+        .choice-btn {
+            font-size: 2.2em;
+            padding: 16px 28px;
+            margin: 0 8px;
+            border-radius: 10px;
+            border: none;
+            background: #eef;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .choice-btn:hover { background: #ddf;}
+        .result { margin: 16px; font-size: 1.4em; font-weight: bold;}
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 16px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: none;
+            background: #faa;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .reset-btn:hover { background: #f88;}
+    </style>
+</head>
+<body>
+    <div class="rps-title">Rock Paper Scissors</div>
+    <div class="rps-container">
+        <div class="score">
+            👤 You: {{ user_score }} &nbsp;&nbsp; 🤖 Computer: {{ computer_score }}
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="choices">
+                {% for move, emoji in emoji_choices %}
+                    <button type="submit" name="choice" value="{{ move }}" class="choice-btn">{{ emoji }}</button>
+                {% endfor %}
+            </div>
+            <button type="submit" name="reset" value="1" class="reset-btn">Reset Scores</button>
+        </form>
+
+        {% if user_choice and computer_choice %}
+            <div>
+                <span>👤 You chose: 
+                    {% for move, emoji in emoji_choices %}
+                        {% if move == user_choice %}
+                            {{ emoji }}
+                        {% endif %}
+                    {% endfor %}
+                </span><br>
+                <span>🤖 Computer chose: 
+                    {% for move, emoji in emoji_choices %}
+                        {% if move == computer_choice %}
+                            {{ emoji }}
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </div>
+        {% endif %}
+
+        {% if result %}
+            <div class="result">{{ result }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
